@@ -22,6 +22,8 @@ import org.w3c.dom.Text;
 
 public class RegisterAct extends AppCompatActivity  {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +67,11 @@ public class RegisterAct extends AppCompatActivity  {
 
                      if(task.isSuccessful()){
                          Toast.makeText(RegisterAct.this, "Uye Kaydı Yapıldı , Aramıza Hoşgeldin....", Toast.LENGTH_SHORT).show();
+                         confMail();
+                         FirebaseAuth.getInstance().signOut();
+
+
+
 
                      }else{
                          Toast.makeText(RegisterAct.this, "Uye Kaydı Yapılırken Bir Sorun Olustu :( , Lütfen " +
@@ -75,6 +82,26 @@ public class RegisterAct extends AppCompatActivity  {
                  }
              });
             }
+            private void confMail(){
+                if(FirebaseAuth.getInstance().getCurrentUser() != null){
+
+                    FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(RegisterAct.this, "Onaylama Maili Gönderildi", Toast.LENGTH_SHORT).show();
+
+                                    }else{
+
+                                        Toast.makeText(RegisterAct.this, "Onaylama Maili Gönderilirken Bir Sorun Oluştu :("+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
+
+            }
+
             private void progressBarGoster(){
                 pbar.setVisibility(ProgressBar.VISIBLE);
 
