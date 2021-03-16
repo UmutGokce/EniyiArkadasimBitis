@@ -1,10 +1,14 @@
 package com.example.eniyiarkadasim;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.app.FragmentManager;
 import android.content.Intent;
-import android.net.sip.SipSession;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +23,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.w3c.dom.Text;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -36,9 +42,10 @@ public class LoginActivity extends AppCompatActivity {
         ProgressBar pbarL = (ProgressBar) findViewById(R.id.pbarL);
         EditText logMail = (EditText)findViewById(R.id.logEmail);
         EditText logPassw = (EditText)findViewById(R.id.logPassw);
+        TextView confMail2 = (TextView)findViewById(R.id.confMail2);
 
 
-        logKayit.setOnClickListener(new View.OnClickListener() {
+            logKayit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterAct.class);
@@ -46,8 +53,15 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+            confMail2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.mainCont, new MailFrag()).commit();
+                }
+            });
 
-        logBtn.setOnClickListener(new View.OnClickListener() {
+            logBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -58,10 +72,17 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                if(task.isSuccessful()){
+                                   if(FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()){
+                                       Toast.makeText(LoginActivity.this, "Başarıyla Giriş Yapıldı."+FirebaseAuth.getInstance().getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+                                       Intent gecis = new Intent(LoginActivity.this,MainActivity.class);
+                                       startActivity(gecis);
+                                   }
+                                   else{
+                                       Toast.makeText(LoginActivity.this, "Lütfen Mail Adresinizi Onaylayın", Toast.LENGTH_SHORT).show();
+                                       FirebaseAuth.getInstance().signOut();
+                                   }
+
                                    progressBarLGizle();
-                                   Toast.makeText(LoginActivity.this, "Başarıyla Giriş Yapıldı."+FirebaseAuth.getInstance().getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
-                                   Intent gecis = new Intent(LoginActivity.this,MainActivity.class);
-                                   startActivity(gecis);
 
                                }else{
                                    progressBarLGizle();
@@ -116,6 +137,8 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseAuth.getInstance().removeAuthStateListener(mAuthStateListener);
             }
         });
+
+
 
 
     }

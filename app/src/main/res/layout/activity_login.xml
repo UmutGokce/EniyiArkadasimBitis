@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:id="@+id/mainCont">
 
     <ImageView
         android:id="@+id/imageView"
@@ -80,4 +81,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/confMail2"
+        android:layout_width="100dp"
+        android:layout_height="64dp"
+        android:text="Onaylama Mailini Tekrar Gönder"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.051"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logKayit"
+        app:layout_constraintVertical_bias="0.068" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
