@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         EditText logMail = (EditText)findViewById(R.id.logEmail);
         EditText logPassw = (EditText)findViewById(R.id.logPassw);
         TextView confMail2 = (TextView)findViewById(R.id.confMail2);
-
+        TextView sendPassw2 = (TextView)findViewById(R.id.tvPassw);
 
             logKayit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +60,15 @@ public class LoginActivity extends AppCompatActivity {
                     ft.replace(R.id.mainCont, new MailFrag()).commit();
                 }
             });
+            sendPassw2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
+                    FragmentTransaction ftpw = getSupportFragmentManager().beginTransaction();
+                    ftpw.replace(R.id.mainCont,new PasswFragment()).commit();
+
+                }
+            });
             logBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
