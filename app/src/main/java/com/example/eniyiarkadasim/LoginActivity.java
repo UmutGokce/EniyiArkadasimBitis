@@ -106,10 +106,10 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             private void myAuthStateListener (){
-                mAuthStateListener= new FirebaseAuth.AuthStateListener() {
+            mAuthStateListener= new FirebaseAuth.AuthStateListener() {
 
 
-                    @Override
+                      @Override
                     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                             if(firebaseAuth.getCurrentUser() != null){
                                 if(firebaseAuth.getCurrentUser().isEmailVerified()){
@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
 
             }
             protected void onStart(){
-                LoginActivity.super.onStart();
+               LoginActivity.super.onStart();
                 FirebaseAuth.getInstance().addAuthStateListener(mAuthStateListener);
 
 

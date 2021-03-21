@@ -9,15 +9,15 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="442dp"
+        android:layout_height="794dp"
         android:background="@color/purple_200">
 
         <EditText
-            android:id="@+id/cf2"
+            android:id="@+id/cf2GetMail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:background="@color/common_google_signin_btn_text_dark_disabled"
             android:ems="10"
             android:hint="E-mail"
@@ -39,7 +39,7 @@
             android:background="@color/common_google_signin_btn_text_dark"
             android:gravity="top"
             android:text="Onaylama Ekranı"
-            android:textAlignment="center"
+
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,10 +55,10 @@
             android:text="Gönder"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.681"
+            app:layout_constraintHorizontal_bias="0.659"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.499" />
+            app:layout_constraintVertical_bias="0.628" />
 
         <Button
             android:id="@+id/cancel"
@@ -67,9 +67,25 @@
             android:text="İPTAL"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/cfBtn"
-            app:layout_constraintHorizontal_bias="0.781"
+            app:layout_constraintHorizontal_bias="0.768"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.628" />
+
+        <EditText
+            android:id="@+id/cf2GetPassword"
+            android:layout_width="209dp"
+            android:layout_height="26dp"
+            android:background="@color/common_google_signin_btn_text_dark_disabled"
+            android:ems="10"
+            android:hint="Parola"
+            android:inputType="textPassword"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.429"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cf2GetMail"
+            app:layout_constraintVertical_bias="0.381" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
