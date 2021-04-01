@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
@@ -66,9 +68,30 @@ public class RegisterAct extends AppCompatActivity  {
                  public void onComplete( Task<AuthResult> task) {
 
                      if(task.isSuccessful()){
-                         Toast.makeText(RegisterAct.this, "Uye Kaydı Yapıldı , Aramıza Hoşgeldin....", Toast.LENGTH_SHORT).show();
+
                          confMail();
-                         FirebaseAuth.getInstance().signOut();
+                         User userx = new User();
+                         userx.setIsim(eMail.getText().toString());
+                         userx.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                         userx.setProfil_resmi(" ");
+                         userx.setTelefon("123123");
+                         userx.setSeviye("1");
+
+                         FirebaseDatabase.getInstance().getReference()
+                                 .child("user")
+                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                 .setValue(userx).addOnCompleteListener(new OnCompleteListener<Void>() {
+                             @Override
+                             public void onComplete(@NonNull Task<Void> task) {
+                                 if(task.isSuccessful()){
+                                     Toast.makeText(RegisterAct.this, "Uye Kaydı Yapıldı , Aramıza Hoşgeldin....", Toast.LENGTH_SHORT).show();
+                                     FirebaseAuth.getInstance().signOut();
+                                     Intent intent = new Intent(RegisterAct.this,LoginActivity.class);
+
+                                 }
+                             }
+                         })   ;
+
 
 
 
