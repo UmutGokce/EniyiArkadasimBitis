@@ -1,4 +1,4 @@
-package com.example.eniyiarkadasim;
+package com.example.eniyiarkadasim.model;
 
 public class User {
 

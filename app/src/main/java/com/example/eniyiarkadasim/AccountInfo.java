@@ -1,16 +1,26 @@
 package com.example.eniyiarkadasim;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eniyiarkadasim.model.User;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,9 +31,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+
+import java.util.HashMap;
 
 public class AccountInfo extends AppCompatActivity {
-
+private Uri imageUri;
+    DatabaseReference db;
+    FirebaseUser fuser;
+    StorageReference storageReference;
+    private StorageTask uploadTask;
+Bitmap bitmap;
+Boolean perm = false;
+private static final int IMAGE_REQUEST =1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +54,7 @@ public class AccountInfo extends AppCompatActivity {
 
 
 
+        ImageView imgpp = (ImageView)findViewById(R.id.imgPp);
         EditText accMail = (EditText)findViewById(R.id.accMail);
         EditText accId = (EditText)findViewById(R.id.accId);
         Button save = (Button)findViewById(R.id.save);
@@ -40,6 +64,16 @@ public class AccountInfo extends AppCompatActivity {
         accMail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         accId.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         accMail.setEnabled(false);
+        TextView getGallery = (TextView)findViewById(R.id.getGallery);
+        TextView takePhoto = (TextView)findViewById(R.id.takePhoto);
+
+        storageReference= FirebaseStorage.getInstance().getReference("uploads");
+
+
+
+
+
+
 
         passwZero.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,13 +141,105 @@ FirebaseDatabase.getInstance().getReference()
             }
         });
 
+        imgpp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            openImage();
+                
+            }
+
+
+
+        });
+
 
 
     }
 
+    private void openImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent,IMAGE_REQUEST);
+
+    }
+    private String getFileExtension(Uri uri){
+        ContentResolver contentResolver = getApplicationContext().getContentResolver();
+        MimeTypeMap mimeTypeMap= MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(imageUri));
+
+    }
+
+    private void uploadImage(){
+      if(imageUri !=null){
+          final StorageReference fileReference=storageReference.child(System.currentTimeMillis()+"."+getFileExtension(imageUri));
+          uploadTask=fileReference.putFile(imageUri);
+          uploadTask.continueWithTask(new Continuation< UploadTask.TaskSnapshot,Task<Uri>>() {
+              @Override
+              public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if(task.isSuccessful()){
+
+                        throw task.getException();
+
+                    }
+return fileReference.getDownloadUrl();
+                                }
+          }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+              @Override
+              public void onComplete(@NonNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+
+                        Uri downloadUri=task.getResult();
+                        String mUri = downloadUri.toString();
+                        db=FirebaseDatabase.getInstance().getReference("user").child(fuser.getUid());
+                        HashMap<String, Object> map=new HashMap<>();
+                        map.put("imageUrl",mUri);
+                        db.updateChildren(map);
+                        
+                    }
+                    else{
+
+                        Toast.makeText(AccountInfo.this, "Başarısız", Toast.LENGTH_SHORT).show();
+                    }
+              }
+          }).addOnFailureListener(new OnFailureListener() {
+              @Override
+              public void onFailure(@NonNull Exception e) {
+                  Toast.makeText(AccountInfo.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+              }
+          });
+
+      }else {
+
+          Toast.makeText(this, "Fotoğraf Seçilmedi", Toast.LENGTH_SHORT).show();
+      }
 
 
-    private void readUserInfo(EditText phone, EditText mail ,EditText id) {
+        //return null;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==IMAGE_REQUEST&& resultCode==RESULT_OK&&data != null&&data.getData()==null){
+            imageUri=data.getData();
+
+
+            if(uploadTask==null&& uploadTask.isInProgress()){
+                Toast.makeText(this, "Upload is in progress", Toast.LENGTH_SHORT).show();
+
+
+            }else{
+
+                uploadImage();
+            }
+        }
+    }
+
+    private void readUserInfo(EditText phone, EditText mail , EditText id) {
 
 
 
@@ -147,4 +273,6 @@ FirebaseDatabase.getInstance().getReference()
 
 
     }
+
+
 }

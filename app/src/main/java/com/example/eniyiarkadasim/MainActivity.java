@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity{
 
+  //  Button crash = (Button)findViewById(R.id.crash);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,13 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+  /*    crash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                throw new RuntimeException("Test Crash");
+            }
+        });
+*/
     }
 
     @Override
@@ -67,6 +77,10 @@ public class MainActivity extends AppCompatActivity{
             case R.id.account :
                 Intent intento = new Intent(MainActivity.this,AccountInfo.class);
                 startActivity(intento);
+
+            case R.id.menuChat :
+                Intent intentc = new Intent(MainActivity.this,Chat.class);
+                startActivity(intentc);
         }
        /* if(id==R.id.optmenu){
                 AlertDialog.Builder ask = new AlertDialog.Builder(MainActivity.this);
